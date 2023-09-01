@@ -12,7 +12,7 @@ class ListViewController: UIViewController {
     var tableView: UITableView = {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
-        table.rowHeight = 50
+        table.rowHeight = 60
         table.register(TaskTableViewCell.self, forCellReuseIdentifier: TaskTableViewCell.identifier)
         table.separatorInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         table.layer.backgroundColor = UIColor.white.cgColor
@@ -29,13 +29,39 @@ class ListViewController: UIViewController {
         return label
     }()
 
-    var editTaskButton = UIButton()
-    var addNewTaskButton = UIButton()
+    var editTaskButton: UIButton = {
+        let button = UIButton()
+        if let symbolImage = UIImage(systemName: "pencil", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)) {
+            button.setImage(symbolImage, for: .normal)
+        }
+        button.backgroundColor = .systemBlue
+        button.tintColor = .white
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 25
+        return button
+    }()
+    
+    var addNewTaskButton: UIButton = {
+        let button = UIButton()
+        if let symbolImage = UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)) {
+            button.setImage(symbolImage, for: .normal)
+        }
+        button.backgroundColor = .systemGreen
+        button.tintColor = .white
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.layer.cornerRadius = 25
+
+        return button
+    }()
     
     var tasksArray: [Task] = [
         Task(title: "Задача 1", description: "Описание 1"),
         Task(title: "Задача 2", description: "Описание 2"),
         Task(title: "Задача 3", description: "Описание 3"),
+        Task(title: "Задача 1", description: "Описание 1"),
+        Task(title: "Задача 2", description: "Описание 2"),
+        Task(title: "Задача 3", description: "Описание 3"),
+        Task(title: "Задача 1", description: "Описание 1"),
     ]
 
     override func viewDidLoad() {
@@ -43,8 +69,12 @@ class ListViewController: UIViewController {
         view.backgroundColor = .white
         tableViewConfigure()
         warningLabelConfigure()
+        addNewTaskButtonConstraints()
+        editButtonCostraints()
     }
-    
+}
+
+extension ListViewController {
     func warningLabelConfigure() {
         view.addSubview(warningLabel)
         
@@ -66,8 +96,29 @@ class ListViewController: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
             tableView.heightAnchor.constraint(
-                equalToConstant: (4 * tableView.rowHeight) + (CGFloat(tasksArray.count - 2) * tableView.rowHeight)
-            )
+                equalToConstant: 200 + (CGFloat(tasksArray.count - 2) * tableView.rowHeight))
+        ])
+    }
+    
+    func editButtonCostraints() {
+        view.addSubview(editTaskButton)
+        
+        NSLayoutConstraint.activate([
+            editTaskButton.bottomAnchor.constraint(equalTo: addNewTaskButton.topAnchor, constant: -30),
+            editTaskButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            editTaskButton.widthAnchor.constraint(equalToConstant: 50),
+            editTaskButton.heightAnchor.constraint(equalToConstant: 50)
+        ])
+    }
+    
+    func addNewTaskButtonConstraints() {
+        view.addSubview(addNewTaskButton)
+        
+        NSLayoutConstraint.activate([
+            addNewTaskButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
+            addNewTaskButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            addNewTaskButton.widthAnchor.constraint(equalToConstant: 50),
+            addNewTaskButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 }
@@ -89,28 +140,4 @@ extension ListViewController: UITableViewDataSource {
         
         return cell
     }
-
 }
-
-/*
- cell.textLabel?.text = tasksArray[indexPath.row]
- cell.detailTextLabel?.text = tasksArray[indexPath.row]
- 
- // Create the accessory button
- 
- 
- // Add spacing between the accessory button and the text
- 
- // Handle accessory button tap
- accessoryButton.addTarget(self, action: #selector(accessoryButtonTapped(sender:)), for: .touchUpInside)
- 
- */
-    // Function to handle accessory button tap
-    //    @objc func accessoryButtonTapped(sender: UIButton) {
-    //            // Handle the tap event here
-    //        if let cell = sender.superview?.superview as? UITableViewCell,
-    //           let indexPath = tableView.indexPath(for: cell) {
-    //                // Use indexPath to identify the tapped cell
-    //                // You can perform actions based on the tapped cell here
-    //        }
-    //    }

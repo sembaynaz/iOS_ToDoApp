@@ -21,7 +21,7 @@ class TaskTableViewCell: UITableViewCell {
     
     let accessoryButton: UIButton = {
         let button = UIButton()
-        button.setBackgroundImage(UIImage(systemName: "circle"), for: .normal) //checkmark.circle
+        button.setBackgroundImage(UIImage(systemName: "circle"), for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.tintColor = .systemYellow
         return button
@@ -65,8 +65,8 @@ class TaskTableViewCell: UITableViewCell {
         NSLayoutConstraint.activate([
             accessoryButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             accessoryButton.centerYAnchor.constraint(equalTo: centerYAnchor),
-            accessoryButton.widthAnchor.constraint(equalToConstant: 20),
-            accessoryButton.heightAnchor.constraint(equalToConstant: 20)
+            accessoryButton.widthAnchor.constraint(equalToConstant: 25),
+            accessoryButton.heightAnchor.constraint(equalToConstant: 25)
         ])
     }
     

@@ -124,7 +124,10 @@ extension ListViewController {
 }
 
 extension ListViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tasksArray[indexPath.row].isComplpete.toggle()
+        tableView.reloadData()
+    }
 }
 
 extension ListViewController: UITableViewDataSource {
@@ -137,6 +140,12 @@ extension ListViewController: UITableViewDataSource {
         
         cell.setData(task: tasksArray[indexPath.row])
         cell.accessoryType = .detailDisclosureButton
+        
+        if tasksArray[indexPath.row].isComplpete {
+            cell.accessoryButton.setBackgroundImage(UIImage(systemName: "checkmark.circle"), for: .normal)
+        } else {
+            cell.accessoryButton.setBackgroundImage(UIImage(systemName: "circle"), for: .normal)
+        }
         
         return cell
     }

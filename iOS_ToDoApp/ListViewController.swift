@@ -34,9 +34,9 @@ class ListViewController: UIViewController {
         if let symbolImage = UIImage(systemName: "pencil", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)) {
             button.setImage(symbolImage, for: .normal)
         }
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .systemBlue
         button.tintColor = .white
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 25
         return button
     }()
@@ -46,9 +46,9 @@ class ListViewController: UIViewController {
         if let symbolImage = UIImage(systemName: "plus", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)) {
             button.setImage(symbolImage, for: .normal)
         }
+        button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .systemGreen
         button.tintColor = .white
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 25
 
         return button
@@ -61,7 +61,7 @@ class ListViewController: UIViewController {
         Task(title: "Задача 1", description: "Описание 1"),
         Task(title: "Задача 2", description: "Описание 2"),
         Task(title: "Задача 3", description: "Описание 3"),
-        Task(title: "Задача 1", description: "Описание 1"),
+        Task(title: "Задача 1", description: "Описание 1")
     ]
 
     override func viewDidLoad() {
@@ -113,6 +113,7 @@ extension ListViewController {
     
     func addNewTaskButtonConstraints() {
         view.addSubview(addNewTaskButton)
+        addNewTaskButton.addTarget(self, action: #selector(addNewTaskButtonTouched), for: .touchDown)
         
         NSLayoutConstraint.activate([
             addNewTaskButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
@@ -148,5 +149,18 @@ extension ListViewController: UITableViewDataSource {
         }
         
         return cell
+    }
+}
+
+extension ListViewController {
+    @objc func addNewTaskButtonTouched() {
+        let vc = NewTaskViewController()
+        let navigationController = UINavigationController(rootViewController: vc)
+        navigationController.modalPresentationStyle = .fullScreen
+        present(navigationController, animated: true)
+    }
+    
+    func editButtonTouched() {
+        
     }
 }

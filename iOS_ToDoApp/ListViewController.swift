@@ -155,9 +155,8 @@ extension ListViewController: UITableViewDataSource {
 extension ListViewController {
     @objc func addNewTaskButtonTouched() {
         let vc = NewTaskViewController()
-//        let navigationController = UINavigationController(rootViewController: vc)
         vc.modalPresentationStyle = .fullScreen
-        navigationController?.present(vc, animated: true)
+        present(vc, animated: true)
     }
     
     func editButtonTouched() {

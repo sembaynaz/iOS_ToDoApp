@@ -9,10 +9,15 @@ import UIKit
 
 class ListViewController: UIViewController {
     
+    let defaults = UserDefaults.standard
+    var tasksArray: [Task] = []
+    var height = 60
+    
     var tableView: UITableView = {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
-        table.rowHeight = 60
+        table.rowHeight = UITableView.automaticDimension
+        table.estimatedRowHeight = 60
         table.register(TaskTableViewCell.self, forCellReuseIdentifier: TaskTableViewCell.identifier)
         table.separatorInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         table.layer.backgroundColor = UIColor.white.cgColor
@@ -54,32 +59,22 @@ class ListViewController: UIViewController {
         return button
     }()
     
-    var tasksArray: [Task] = [
-        Task(title: "Задача 1", description: "Описание 1"),
-        Task(title: "Задача 2", description: "Описание 2"),
-        Task(title: "Задача 3", description: "Описание 3"),
-        Task(title: "Задача 1", description: "Описание 1"),
-        Task(title: "Задача 2", description: "Описание 2"),
-        Task(title: "Задача 3", description: "Описание 3"),
-        Task(title: "Задача 1", description: "Описание 1")
-    ]
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         tableViewConfigure()
-        warningLabelConfigure()
         addNewTaskButtonConstraints()
         editButtonCostraints()
+        getTasks()
+        tableView.reloadData()
     }
 }
 
 extension ListViewController {
     func warningLabelConfigure() {
-        view.addSubview(warningLabel)
-        
+        tableView.addSubview(warningLabel)
         NSLayoutConstraint.activate([
-            warningLabel.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 10),
+//            warningLabel.topAnchor.constraint(equalTo: tableView.tableFooterView!.bottomAnchor),
             warningLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             warningLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
             warningLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
@@ -90,13 +85,13 @@ extension ListViewController {
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
+        warningLabelConfigure()
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            tableView.heightAnchor.constraint(
-                equalToConstant: 200 + (CGFloat(tasksArray.count - 2) * tableView.rowHeight))
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0)
         ])
     }
     
@@ -161,5 +156,27 @@ extension ListViewController {
     
     func editButtonTouched() {
         
+    }
+}
+
+extension ListViewController {
+    func getTasks() {
+        guard let data = defaults.data(forKey: "tasks") else {
+            return
+        }
+        
+        do {
+            let tasks = try JSONDecoder().decode([Task].self, from: data)
+            tasksArray = tasks
+            height *= tasksArray.count
+        } catch {
+            print("error decode")
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        getTasks()
+        tableView.reloadData()
     }
 }

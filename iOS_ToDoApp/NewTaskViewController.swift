@@ -9,7 +9,9 @@ import UIKit
 
 class NewTaskViewController: UIViewController {
 
+    let defaults = UserDefaults.standard
     let navigationBar = UINavigationBar()
+    var tasksArray: [Task] = []
     
     let label: UILabel = {
         let label = UILabel()
@@ -45,6 +47,9 @@ class NewTaskViewController: UIViewController {
         navBarConfigure()
         labelConfigure()
         configureTextFields()
+        hideKeyboardWhenTappedAround()
+        getTasks()
+        print("new \(tasksArray)")
     }
 }
 
@@ -108,5 +113,39 @@ extension NewTaskViewController {
     }
     
     @objc func saveButtonTapped() {
+        tasksArray.append(
+            Task(title: titleTextField.text!, description: descriptionTextField.text!)
+        )
+      
+        
+        do {
+            let json = try JSONEncoder().encode(tasksArray)
+            defaults.set(json, forKey: "tasks")
+        } catch {
+            print("Error encoder")
+        }
+    }
+    
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+    
+    @objc func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    func getTasks() {
+        guard let data = defaults.data(forKey: "tasks") else {
+            return
+        }
+        
+        do {
+            let tasks = try JSONDecoder().decode([Task].self, from: data)
+            tasksArray = tasks
+        } catch {
+            print("error decode")
+        }
     }
 }

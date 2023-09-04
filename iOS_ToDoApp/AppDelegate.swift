@@ -33,12 +33,3 @@ var window: UIWindow?
 
 
 }
-
-extension AppDelegate {
-    static var shared: AppDelegate {
-        return UIApplication.shared.delegate as! AppDelegate
-    }
-    var rootViewController: ListViewController {
-        return window!.rootViewController as! ListViewController
-    }
-}

@@ -23,6 +23,7 @@ class ListViewController: UIViewController {
         table.register(TaskTableViewCell.self, forCellReuseIdentifier: TaskTableViewCell.identifier)
         table.separatorInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         table.layer.backgroundColor = UIColor.white.cgColor
+        table.allowsSelectionDuringEditing = true
         return table
     }()
     
@@ -67,13 +68,6 @@ class ListViewController: UIViewController {
         return gesture
     }()
     
-    lazy var tapGesture: UITapGestureRecognizer = {
-        let gesture = UITapGestureRecognizer()
-        gesture.addTarget(self, action: #selector(tapGestureAction))
-        return gesture
-    }()
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -83,7 +77,6 @@ class ListViewController: UIViewController {
         getTasks()
         tableView.reloadData()
         tableView.addGestureRecognizer(longPressGesture)
-        tableView.addGestureRecognizer(tapGesture)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -144,8 +137,16 @@ extension ListViewController {
 
 extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tasksArray[indexPath.row].isComplpete.toggle()
-        tableView.reloadData()
+        if isStartChange {
+            tableView.isEditing = false
+            isStartChange = false
+            print("tap")
+            tableView.reloadData()
+        } else {
+            tasksArray[indexPath.row].isComplpete.toggle()
+            tableView.reloadData()
+            saveTasks()
+        }
     }
     
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
@@ -156,6 +157,15 @@ extension ListViewController: UITableViewDelegate {
 
         tasksArray.swapAt(sourceIndexPath.row, destinationIndexPath.row)
         saveTasks()
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            tasksArray.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            tableView.reloadData()
+            saveTasks()
+        }
     }
 }
 
@@ -222,12 +232,7 @@ extension ListViewController {
         
         tableView.isEditing = true
         isStartChange = true
-        tableView.reloadData()
-    }
-    
-    @objc func tapGestureAction() {
-        tableView.isEditing = false
-        isStartChange = false
+        print("long")
         tableView.reloadData()
     }
 }

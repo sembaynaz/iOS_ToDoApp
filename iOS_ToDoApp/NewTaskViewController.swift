@@ -117,7 +117,6 @@ extension NewTaskViewController {
             Task(title: titleTextField.text!, description: descriptionTextField.text!)
         )
       
-        
         do {
             let json = try JSONEncoder().encode(tasksArray)
             defaults.set(json, forKey: "tasks")

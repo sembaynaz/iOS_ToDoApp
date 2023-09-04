@@ -11,7 +11,9 @@ class ListViewController: UIViewController {
     
     let defaults = UserDefaults.standard
     var tasksArray: [Task] = []
-    var height = 60
+    var sourceIndexPath: IndexPath?
+    var draggingView: UIView?
+    var isStartChange = false
     
     var tableView: UITableView = {
         let table = UITableView()
@@ -59,12 +61,33 @@ class ListViewController: UIViewController {
         return button
     }()
     
+    lazy var longPressGesture: UILongPressGestureRecognizer = {
+        let gesture = UILongPressGestureRecognizer()
+        gesture.addTarget(self, action: #selector(longPressAction))
+        return gesture
+    }()
+    
+    lazy var tapGesture: UITapGestureRecognizer = {
+        let gesture = UITapGestureRecognizer()
+        gesture.addTarget(self, action: #selector(tapGestureAction))
+        return gesture
+    }()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         tableViewConfigure()
         addNewTaskButtonConstraints()
         editButtonCostraints()
+        getTasks()
+        tableView.reloadData()
+        tableView.addGestureRecognizer(longPressGesture)
+        tableView.addGestureRecognizer(tapGesture)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         getTasks()
         tableView.reloadData()
     }
@@ -85,7 +108,7 @@ extension ListViewController {
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
-        warningLabelConfigure()
+//        warningLabelConfigure()
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
@@ -124,6 +147,16 @@ extension ListViewController: UITableViewDelegate {
         tasksArray[indexPath.row].isComplpete.toggle()
         tableView.reloadData()
     }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+
+        tasksArray.swapAt(sourceIndexPath.row, destinationIndexPath.row)
+        saveTasks()
+    }
 }
 
 extension ListViewController: UITableViewDataSource {
@@ -143,6 +176,8 @@ extension ListViewController: UITableViewDataSource {
             cell.accessoryButton.setBackgroundImage(UIImage(systemName: "circle"), for: .normal)
         }
         
+        cell.isChangeConstraints = isStartChange
+        
         return cell
     }
 }
@@ -157,9 +192,7 @@ extension ListViewController {
     func editButtonTouched() {
         
     }
-}
-
-extension ListViewController {
+    
     func getTasks() {
         guard let data = defaults.data(forKey: "tasks") else {
             return
@@ -168,15 +201,33 @@ extension ListViewController {
         do {
             let tasks = try JSONDecoder().decode([Task].self, from: data)
             tasksArray = tasks
-            height *= tasksArray.count
         } catch {
             print("error decode")
         }
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        getTasks()
+    func saveTasks() {
+        do {
+            let json = try JSONEncoder().encode(tasksArray)
+            defaults.set(json, forKey: "tasks")
+        } catch {
+            print("Error encoder")
+        }
+    }
+    
+    @objc func longPressAction(sender: UILongPressGestureRecognizer) {
+        if isEditing {
+            return
+        }
+        
+        tableView.isEditing = true
+        isStartChange = true
+        tableView.reloadData()
+    }
+    
+    @objc func tapGestureAction() {
+        tableView.isEditing = false
+        isStartChange = false
         tableView.reloadData()
     }
 }

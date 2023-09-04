@@ -10,6 +10,17 @@ import UIKit
 class TaskTableViewCell: UITableViewCell {
     
     public static let identifier = "TaskTableViewCell"
+    private var accessoryButtonLeadingConstraint: NSLayoutConstraint!
+
+    var isChangeConstraints: Bool = false {
+        didSet {
+            if isChangeConstraints {
+                accessoryButtonLeadingConstraint.constant = 50
+            } else {
+                accessoryButtonLeadingConstraint.constant = 10
+            }
+        }
+    }
     
     let stackLabel: UIStackView = {
         let stack = UIStackView()
@@ -50,6 +61,9 @@ class TaskTableViewCell: UITableViewCell {
         stackLabel.addArrangedSubview(titleLabel)
         stackLabel.addArrangedSubview(descriptionLabel)
         stackConstraints()
+        
+        accessoryButtonLeadingConstraint = accessoryButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10)
+        accessoryButtonLeadingConstraint.isActive = true
     }
     
     required init?(coder: NSCoder) {
@@ -63,7 +77,6 @@ class TaskTableViewCell: UITableViewCell {
     
     func buttonConstraints() {
         NSLayoutConstraint.activate([
-            accessoryButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
             accessoryButton.centerYAnchor.constraint(equalTo: centerYAnchor),
             accessoryButton.widthAnchor.constraint(equalToConstant: 25),
             accessoryButton.heightAnchor.constraint(equalToConstant: 25)

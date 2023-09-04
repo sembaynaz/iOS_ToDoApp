@@ -1,9 +1,10 @@
 # iOS_ToDoApp
 
-<img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/16ce05a4-c97c-48d8-8486-ce9227d52b48">
-<img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/79a106fe-b242-4c78-a546-baf547497189">
-<img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/b3fb47c0-851b-4f38-9d6d-1ce352a31ca1">
 <img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/b3942afb-8fa9-4470-bceb-e1989c508b99">
+<img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/b3fb47c0-851b-4f38-9d6d-1ce352a31ca1">
+<img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/79a106fe-b242-4c78-a546-baf547497189">
+<img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/16ce05a4-c97c-48d8-8486-ce9227d52b48">
+
 
 ## Project Description
 This iOS to-do app provides a basic but functional to-do list management system with features for creating, editing, completing, and reordering tasks.

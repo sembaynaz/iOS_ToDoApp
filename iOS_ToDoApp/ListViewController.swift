@@ -16,8 +16,7 @@ class ListViewController: UIViewController {
     var tableView: UITableView = {
         let table = UITableView()
         table.translatesAutoresizingMaskIntoConstraints = false
-        table.rowHeight = UITableView.automaticDimension
-        table.estimatedRowHeight = 60
+        table.rowHeight = 60
         table.register(TaskTableViewCell.self, forCellReuseIdentifier: TaskTableViewCell.identifier)
         table.separatorInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
         table.layer.backgroundColor = UIColor.white.cgColor
@@ -25,16 +24,6 @@ class ListViewController: UIViewController {
         return table
     }()
     
-    var warningLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Создайте новую задачу, нажав на кнопку плюс"
-        label.font = UIFont.systemFont(ofSize: 18)
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        return label
-    }()
-
     lazy var editTaskButton: UIButton = {
         let button = UIButton()
         if let symbolImage = UIImage(systemName: "pencil", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)) {
@@ -79,27 +68,40 @@ class ListViewController: UIViewController {
 }
 
 extension ListViewController {
-    func warningLabelConfigure() {
-        tableView.addSubview(warningLabel)
+    
+    func addFooterView() {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.frame.width, height: 50))
+        
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Создайте новую задачу, нажав на кнопку плюс"
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.font = UIFont.systemFont(ofSize: 18)
+        
+        footerView.addSubview(label)
+        tableView.tableFooterView = footerView
+        
         NSLayoutConstraint.activate([
-//            warningLabel.topAnchor.constraint(equalTo: tableView.tableFooterView!.bottomAnchor),
-            warningLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            warningLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30),
-            warningLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30)
+            label.topAnchor.constraint(equalTo: footerView.topAnchor, constant: 0),
+            label.trailingAnchor.constraint(equalTo: footerView.trailingAnchor, constant: -30),
+            label.leadingAnchor.constraint(equalTo: footerView.leadingAnchor, constant: 30),
+            label.bottomAnchor.constraint(equalTo: footerView.bottomAnchor, constant: 0)
         ])
+        
     }
     
     func tableViewConfigure() {
         view.addSubview(tableView)
         tableView.dataSource = self
         tableView.delegate = self
-//        warningLabelConfigure()
+        addFooterView()
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 0),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 0),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0)
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0),
         ])
     }
     
@@ -163,6 +165,10 @@ extension ListViewController: UITableViewDelegate {
         vc.editedIndex = indexPath.row
         vc.isEditTask = true
         present(vc, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
 }
 

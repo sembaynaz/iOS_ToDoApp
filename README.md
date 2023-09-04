@@ -1,8 +1,9 @@
 # iOS_ToDoApp
 
-# iOS_StopWatch
-<img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_StopWatch/assets/96616194/b92e630e-7710-43b4-b49b-53ea0af173f4">
-<img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_StopWatch/assets/96616194/da910229-7c28-460f-85de-cfb0a302e6ce">
+<img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/16ce05a4-c97c-48d8-8486-ce9227d52b48">
+<img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/79a106fe-b242-4c78-a546-baf547497189">
+<img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/b3fb47c0-851b-4f38-9d6d-1ce352a31ca1">
+<img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/b3942afb-8fa9-4470-bceb-e1989c508b99">
 
 ## Project Description
 This iOS to-do app provides a basic but functional to-do list management system with features for creating, editing, completing, and reordering tasks.
@@ -22,6 +23,7 @@ Tasks are persisted between app launches using UserDefaults.
 **Task Struct:** The project includes a Task struct that represents a to-do item. Each task has a title, description, and a boolean flag indicating whether it is marked as complete.
 
 View Controllers:
+
 **ListViewController:** This is the main view controller that displays a list of tasks. It includes the following features:
 A table view that lists tasks.
 Buttons for adding new tasks and toggling editing mode.

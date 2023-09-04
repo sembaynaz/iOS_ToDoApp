@@ -56,14 +56,13 @@ class TaskTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         addSubview(accessoryButton)
         buttonConstraints()
+        accessoryButtonLeadingConstraint = accessoryButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10)
+        accessoryButtonLeadingConstraint.isActive = true
         
         addSubview(stackLabel)
         stackLabel.addArrangedSubview(titleLabel)
         stackLabel.addArrangedSubview(descriptionLabel)
         stackConstraints()
-        
-        accessoryButtonLeadingConstraint = accessoryButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10)
-        accessoryButtonLeadingConstraint.isActive = true
     }
     
     required init?(coder: NSCoder) {

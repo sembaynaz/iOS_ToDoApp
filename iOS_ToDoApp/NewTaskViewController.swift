@@ -12,6 +12,8 @@ class NewTaskViewController: UIViewController {
     let defaults = UserDefaults.standard
     let navigationBar = UINavigationBar()
     var tasksArray: [Task] = []
+    var isEditTask = false
+    var editedIndex: Int?
     
     let label: UILabel = {
         let label = UILabel()
@@ -49,11 +51,10 @@ class NewTaskViewController: UIViewController {
         configureTextFields()
         hideKeyboardWhenTappedAround()
         getTasks()
-        print("new \(tasksArray)")
+        editTask()
     }
 }
 
-//Constraints
 extension NewTaskViewController {
     func configureTextFields() {
         view.addSubview(titleTextField)
@@ -102,27 +103,34 @@ extension NewTaskViewController {
             navigationBar.heightAnchor.constraint(equalToConstant: 44.0)
         ])
     }
-    
-    
 }
 
-// Functionality
 extension NewTaskViewController {
     @objc func cancelButtonTapped() {
         dismiss(animated: true)
     }
     
     @objc func saveButtonTapped() {
-        tasksArray.append(
-            Task(title: titleTextField.text!, description: descriptionTextField.text!)
-        )
-      
+        if isEditTask {
+            tasksArray[editedIndex!].title = titleTextField.text!
+            tasksArray[editedIndex!].description = descriptionTextField.text!
+            
+            isEditTask = false
+            editedIndex = nil
+        } else {
+            tasksArray.append(
+                Task(title: titleTextField.text!, description: descriptionTextField.text!)
+            )
+        }
+        
         do {
             let json = try JSONEncoder().encode(tasksArray)
             defaults.set(json, forKey: "tasks")
         } catch {
             print("Error encoder")
         }
+        
+        cancelButtonTapped()
     }
     
     func hideKeyboardWhenTappedAround() {
@@ -146,5 +154,14 @@ extension NewTaskViewController {
         } catch {
             print("error decode")
         }
+    }
+    
+    func editTask() {
+        if !isEditTask {
+            return
+        }
+        
+        titleTextField.text = tasksArray[editedIndex!].title
+        descriptionTextField.text = tasksArray[editedIndex!].description
     }
 }

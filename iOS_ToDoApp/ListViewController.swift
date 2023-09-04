@@ -11,8 +11,6 @@ class ListViewController: UIViewController {
     
     let defaults = UserDefaults.standard
     var tasksArray: [Task] = []
-    var sourceIndexPath: IndexPath?
-    var draggingView: UIView?
     var isStartChange = false
     
     var tableView: UITableView = {
@@ -37,11 +35,12 @@ class ListViewController: UIViewController {
         return label
     }()
 
-    var editTaskButton: UIButton = {
+    lazy var editTaskButton: UIButton = {
         let button = UIButton()
         if let symbolImage = UIImage(systemName: "pencil", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)) {
             button.setImage(symbolImage, for: .normal)
         }
+        button.addTarget(self, action: #selector(editButtonTouched), for: .touchDown)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.backgroundColor = .systemBlue
         button.tintColor = .white
@@ -62,12 +61,6 @@ class ListViewController: UIViewController {
         return button
     }()
     
-    lazy var longPressGesture: UILongPressGestureRecognizer = {
-        let gesture = UILongPressGestureRecognizer()
-        gesture.addTarget(self, action: #selector(longPressAction))
-        return gesture
-    }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -76,7 +69,6 @@ class ListViewController: UIViewController {
         editButtonCostraints()
         getTasks()
         tableView.reloadData()
-        tableView.addGestureRecognizer(longPressGesture)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -137,16 +129,14 @@ extension ListViewController {
 
 extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if isStartChange {
-            tableView.isEditing = false
-            isStartChange = false
-            print("tap")
-            tableView.reloadData()
-        } else {
-            tasksArray[indexPath.row].isComplpete.toggle()
-            tableView.reloadData()
-            saveTasks()
+        tasksArray[indexPath.row].isComplpete.toggle()
+        if tasksArray[indexPath.row].isComplpete {
+            let task = tasksArray.remove(at: indexPath.row)
+            tasksArray.append(task)
         }
+        
+        saveTasks()
+        tableView.reloadData()
     }
     
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
@@ -154,7 +144,6 @@ extension ListViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-
         tasksArray.swapAt(sourceIndexPath.row, destinationIndexPath.row)
         saveTasks()
     }
@@ -167,6 +156,14 @@ extension ListViewController: UITableViewDelegate {
             saveTasks()
         }
     }
+    
+    func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
+        let vc = NewTaskViewController()
+        vc.modalPresentationStyle = .fullScreen
+        vc.editedIndex = indexPath.row
+        vc.isEditTask = true
+        present(vc, animated: true)
+    }
 }
 
 extension ListViewController: UITableViewDataSource {
@@ -176,17 +173,15 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: TaskTableViewCell.identifier) as! TaskTableViewCell
-        
         cell.setData(task: tasksArray[indexPath.row])
         cell.accessoryType = .detailDisclosureButton
+        cell.isChangeConstraints = isStartChange
         
         if tasksArray[indexPath.row].isComplpete {
             cell.accessoryButton.setBackgroundImage(UIImage(systemName: "checkmark.circle"), for: .normal)
         } else {
             cell.accessoryButton.setBackgroundImage(UIImage(systemName: "circle"), for: .normal)
         }
-        
-        cell.isChangeConstraints = isStartChange
         
         return cell
     }
@@ -199,8 +194,17 @@ extension ListViewController {
         present(vc, animated: true)
     }
     
-    func editButtonTouched() {
-        
+    @objc func editButtonTouched() {
+        if isStartChange {
+            tableView.isEditing = false
+            isStartChange = false
+            print("tap")
+            tableView.reloadData()
+        } else {
+            tableView.isEditing = true
+            isStartChange = true
+            tableView.reloadData()
+        }
     }
     
     func getTasks() {
@@ -223,16 +227,5 @@ extension ListViewController {
         } catch {
             print("Error encoder")
         }
-    }
-    
-    @objc func longPressAction(sender: UILongPressGestureRecognizer) {
-        if isEditing {
-            return
-        }
-        
-        tableView.isEditing = true
-        isStartChange = true
-        print("long")
-        tableView.reloadData()
     }
 }

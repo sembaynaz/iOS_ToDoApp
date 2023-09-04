@@ -54,7 +54,7 @@ class NewTaskViewController: UIViewController {
         editTask()
     }
 }
-
+//MARK: COnstraints
 extension NewTaskViewController {
     func configureTextFields() {
         view.addSubview(titleTextField)
@@ -105,6 +105,7 @@ extension NewTaskViewController {
     }
 }
 
+//MARK: Functions
 extension NewTaskViewController {
     @objc func cancelButtonTapped() {
         dismiss(animated: true)

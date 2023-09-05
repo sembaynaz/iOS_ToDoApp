@@ -1,6 +1,7 @@
 # iOS_ToDoApp
 
 <img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/b3942afb-8fa9-4470-bceb-e1989c508b99">
+<img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/fc7990fa-0130-4a98-b8de-e735c14894f4">
 <img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/4c4c9095-6952-4cf4-8c8c-ad392d36e3e6">
 <img width = "245" height = "500" src = "https://github.com/sembaynaz/iOS_ToDoApp/assets/96616194/16ce05a4-c97c-48d8-8486-ce9227d52b48">
 

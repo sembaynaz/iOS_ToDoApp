@@ -76,6 +76,7 @@ class ListViewController: UIViewController {
         tableView.reloadData()
     }
 }
+
 //MARK: Constraints
 extension ListViewController {
     func tableViewConfigure() {
@@ -203,11 +204,18 @@ extension ListViewController {
         if isStartChange {
             tableView.isEditing = false
             isStartChange = false
-            print("tap")
+            if let symbolImage = UIImage(systemName: "pencil", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)) {
+                editTaskButton.setImage(symbolImage, for: .normal)
+            }
+            addNewTaskButton.isHidden = false
             tableView.reloadData()
         } else {
             tableView.isEditing = true
             isStartChange = true
+            if let symbolImage = UIImage(systemName: "xmark", withConfiguration: UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)) {
+                editTaskButton.setImage(symbolImage, for: .normal)
+            }
+            addNewTaskButton.isHidden = true
             tableView.reloadData()
         }
     }
